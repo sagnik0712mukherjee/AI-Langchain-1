@@ -1,14 +1,19 @@
-from langchain_community.chat_models import ChatOllama
+import os
+from langchain_openai import ChatOpenAI
 import streamlit as st
-from langchain.globals import set_debug
-
-set_debug(True)
 
 st.title("Ask Me Anything 😉")
 
-question = st.text_input("Enter the question here... ")
+with st.sidebar:
+    st.title("Enter your OpanAI API KEY")
+    OPENAI_API_KEY = st.text_input("OpenAI API Key", type="password")
 
-llm=ChatOllama(model="llama3.2:latest")
+if not OPENAI_API_KEY:
+    st.info("You cannot proceed without putting your API key")
+    st.stop()
+
+llm=ChatOpenAI(model="gpt-4o", api_key=OPENAI_API_KEY)
+question = st.text_input("Enter the question here... ")
 
 if question and llm:
     response = llm.invoke(question)
